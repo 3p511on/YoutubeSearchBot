@@ -19,5 +19,10 @@
     "eslint-plugin-prettier": "^4.0.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1"
+  },
+  "dependencies": {
+    "dotenv": "^14.1.0",
+    "telegraf": "3.38",
+    "telegraf-i18n": "^6.6.0"
   }
 }
