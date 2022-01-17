@@ -1,0 +1,4 @@
+languageName: Русский
+
+start:
+  greeting: 👋 Привет, <b>${from.first_name}</b>
