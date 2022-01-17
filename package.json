@@ -1,0 +1,23 @@
+{
+  "name": "youtubesearchbot",
+  "version": "1.0.0",
+  "description": "Use Youtube search to find live streams by query. Notify user when stream is not showing",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "npm run lint",
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "lint": "eslint src/index.js"
+  },
+  "keywords": [],
+  "author": "Philipp Zelinski <filipbon7@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "eslint": "^8.7.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-prettier": "^4.0.0",
+    "nodemon": "^2.0.15",
+    "prettier": "^2.5.1"
+  }
+}
