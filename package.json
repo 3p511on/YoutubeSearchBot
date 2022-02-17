@@ -4,7 +4,7 @@
   "description": "Use Youtube search to find live streams by query. Notify user when stream is not showing",
   "main": "src/index.js",
   "scripts": {
-    "test": "npm run lint",
+    "test": "npm run lint && jest",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "lint": "eslint src/index.js"
