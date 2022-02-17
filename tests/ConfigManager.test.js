@@ -1,12 +1,51 @@
 'use strict';
 
+const fs = require('fs');
 const ConfigManager = require('../src/utilities/ConfigManager');
 
-// TODO: Test creating clear config when it does not exists
+const CONFIG_PATH = 'config.json';
+const TEMP_CONFIG_PATH = `${CONFIG_PATH}.bak`;
 
-// TODO: Test getConfig()
-// - creation of clear config when it does not exists
-// - return parsed file content
+const exists = (filePath = CONFIG_PATH) => fs.existsSync(filePath);
+const configExists = () => exists(CONFIG_PATH);
+const deleteConfig = () => {
+  if (configExists()) fs.unlinkSync(CONFIG_PATH);
+};
+
+// Save current config, if it already exists
+beforeAll(() => {
+  if (!configExists()) return;
+  fs.renameSync(CONFIG_PATH, TEMP_CONFIG_PATH);
+});
+
+afterAll(() => {
+  deleteConfig();
+  if (exists(TEMP_CONFIG_PATH)) fs.renameSync(TEMP_CONFIG_PATH, CONFIG_PATH);
+});
+
+describe('getConfig()', () => {
+  beforeEach(deleteConfig);
+
+  it('should return empty array, when config does not exist', () => {
+    const config = ConfigManager.getConfig();
+    expect(Array.isArray(config)).toBeTruthy();
+    expect(config.length).toBe(0);
+  });
+
+  it('should create config file, if it does not exists', () => {
+    ConfigManager.getConfig();
+    expect(configExists()).toBeTruthy();
+    const rawConfig = fs.readFileSync(CONFIG_PATH, 'utf-8');
+    expect(rawConfig).toBe('[]');
+  });
+
+  it('should return parsed file content', () => {
+    const configContent = [{ userID: 123, authData: 'Hi Mom!' }];
+    fs.writeFileSync(CONFIG_PATH, JSON.stringify(configContent));
+    const returnedValue = ConfigManager.getConfig();
+    expect(returnedValue).toEqual(configContent);
+  });
+});
 
 // TODO: Test updateConfig()
 // - should save provided stringified config
