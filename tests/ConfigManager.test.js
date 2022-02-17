@@ -11,6 +11,11 @@ const configExists = () => exists(CONFIG_PATH);
 const deleteConfig = () => {
   if (configExists()) fs.unlinkSync(CONFIG_PATH);
 };
+const getConfigContent = () => {
+  const rawConfig = fs.readFileSync(CONFIG_PATH, 'utf-8');
+  const parsedConfig = JSON.parse(rawConfig);
+  return parsedConfig;
+};
 
 // Save current config, if it already exists
 beforeAll(() => {
@@ -52,17 +57,45 @@ describe('updateConfig()', () => {
   it('should save given data to config file properly', () => {
     const newConfig = [{ userID: 123, authData: 'Hi Mom!' }];
     ConfigManager.updateConfig(newConfig);
-
-    const rawConfig = fs.readFileSync(CONFIG_PATH);
-    const parsedConfig = JSON.parse(rawConfig);
-    expect(parsedConfig).toEqual(newConfig);
+    expect(getConfigContent()).toEqual(newConfig);
   });
 });
 
-// TODO: Test createUser
-// - should save defaultConfig, if nothing was provided
-// - should use provided config
-// - new data should be stored in config file
+describe('createUser()', () => {
+  beforeEach(deleteConfig);
+
+  const check = (input, expectedOutput) => {
+    const returnedValue = ConfigManager.createUser(...input);
+    expect(returnedValue).toEqual(expectedOutput);
+    expect(getConfigContent()).toEqual([expectedOutput]);
+  };
+
+  it('should save defaultConfig, if nothing was provided', () => {
+    const input = [{}];
+    const expectedOutput = { userID: 0, authData: null };
+    check(input, expectedOutput);
+  });
+
+  it('should save options that was not provided in defaultConfig', () => {
+    const input = [{ userID: 123, test: true }];
+    const expectedOutput = { userID: 123, authData: null, test: true };
+    check(input, expectedOutput);
+  });
+
+  it('should use default options if only userID was provided', () => {
+    const input = [{ userID: 123 }];
+    const expectedOutput = { userID: 123, authData: null };
+    check(input, expectedOutput);
+  });
+
+  it('should use given config object if it is provided', () => {
+    const customConfig = [{ userID: 456, authData: 'test' }];
+    const input = [{ userID: 123 }, customConfig];
+    const expectedOutput = [...customConfig, { userID: 123, authData: null }];
+    ConfigManager.createUser(...input);
+    expect(getConfigContent()).toEqual(expectedOutput);
+  });
+});
 
 // TODO: getUser
 // - should return blank user object, if entry doesn't exists
