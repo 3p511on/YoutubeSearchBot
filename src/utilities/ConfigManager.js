@@ -13,7 +13,7 @@ module.exports = class ConfigManager {
       return [];
     }
 
-    const rawConfig = fs.readFileSync(CONFIG_PATH);
+    const rawConfig = fs.readFileSync(CONFIG_PATH, 'utf-8');
     const parsedConfig = JSON.parse(rawConfig);
     return parsedConfig;
   }
