@@ -42,13 +42,22 @@ describe('getConfig()', () => {
   it('should return parsed file content', () => {
     const configContent = [{ userID: 123, authData: 'Hi Mom!' }];
     fs.writeFileSync(CONFIG_PATH, JSON.stringify(configContent));
+
     const returnedValue = ConfigManager.getConfig();
     expect(returnedValue).toEqual(configContent);
   });
 });
 
-// TODO: Test updateConfig()
-// - should save provided stringified config
+describe('updateConfig()', () => {
+  it('should save given data to config file properly', () => {
+    const newConfig = [{ userID: 123, authData: 'Hi Mom!' }];
+    ConfigManager.updateConfig(newConfig);
+
+    const rawConfig = fs.readFileSync(CONFIG_PATH);
+    const parsedConfig = JSON.parse(rawConfig);
+    expect(parsedConfig).toEqual(newConfig);
+  });
+});
 
 // TODO: Test createUser
 // - should save defaultConfig, if nothing was provided
