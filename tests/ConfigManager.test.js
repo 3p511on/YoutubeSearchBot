@@ -90,10 +90,32 @@ describe('createUser()', () => {
   });
 });
 
-// TODO: getUser
-// - should return blank user object, if entry doesn't exists
-// - should return user from config from provided id
-// - should use custom config if it was provided
+describe('getUser()', () => {
+  it('should create and return new user if he does not exist', () => {
+    const returnedValue = ConfigManager.getUser(123);
+    const expectedOutput = { userID: 123, authData: null };
+    expect(returnedValue).toEqual(expectedOutput);
+  });
+
+  it('should save new user to config file if he does not exist', () => {
+    const config = getConfigContent();
+    const user = config.find((entry) => entry.userID === 123);
+    expect(user).toEqual({ userID: 123, authData: null });
+  });
+
+  it('should return user from config file within provided id', () => {
+    const userObject = { userID: 123, authData: 'Hi Mom!', test: true };
+    fs.writeFileSync(CONFIG_PATH, JSON.stringify([userObject]));
+    const returnedValue = ConfigManager.getUser(123);
+    expect(returnedValue).toEqual(userObject);
+  });
+
+  it('should use custom config if it was provided', () => {
+    const userObject = { userID: 123, authData: 'Hi Mom!', test: true };
+    const returnedValue = ConfigManager.getUser(123, [userObject]);
+    expect(returnedValue).toEqual(userObject);
+  });
+});
 
 // TODO: updateUser
 // - should add new properties to user
