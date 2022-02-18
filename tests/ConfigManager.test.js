@@ -91,6 +91,8 @@ describe('createUser()', () => {
 });
 
 describe('getUser()', () => {
+  beforeEach(deleteConfig);
+
   it('should create and return new user if he does not exist', () => {
     const returnedValue = ConfigManager.getUser(123);
     const expectedOutput = { userID: 123, authData: null };
@@ -98,6 +100,7 @@ describe('getUser()', () => {
   });
 
   it('should save new user to config file if he does not exist', () => {
+    ConfigManager.getUser(123);
     const config = getConfigContent();
     const user = config.find((entry) => entry.userID === 123);
     expect(user).toEqual({ userID: 123, authData: null });
@@ -117,7 +120,37 @@ describe('getUser()', () => {
   });
 });
 
-// TODO: updateUser
-// - should add new properties to user
-// - should save new data to config file
-// - should use custom config if it was provided
+describe('updateUser()', () => {
+  beforeEach(deleteConfig);
+
+  it('should add new properties to already created user', () => {
+    ConfigManager.getUser(123);
+    ConfigManager.updateUser(123, { test: true });
+    const config = getConfigContent();
+    const user = config.find((entry) => entry.userID === 123);
+    expect(user).toEqual({ userID: 123, authData: null, test: true });
+  });
+
+  it('should update old properties of already created user', () => {
+    ConfigManager.getUser(123);
+    ConfigManager.updateUser(123, { authData: 'Test' });
+    const config = getConfigContent();
+    const user = config.find((entry) => entry.userID === 123);
+    expect(user).toEqual({ userID: 123, authData: 'Test' });
+  });
+
+  it('should use custom config if it was provided', () => {
+    const customConfig = [
+      { userID: 123, authData: 'Test', test: true },
+      { userID: 456, authData: null },
+    ];
+
+    ConfigManager.updateUser(123, { test: false }, customConfig);
+    ConfigManager.updateUser(456, { test: true }, customConfig);
+
+    const config = getConfigContent();
+    const [userA, userB] = config;
+    expect(userA).toEqual({ userID: 123, authData: 'Test', test: false });
+    expect(userB).toEqual({ userID: 456, authData: null, test: true });
+  });
+});
