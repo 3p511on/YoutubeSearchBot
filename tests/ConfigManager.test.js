@@ -71,28 +71,21 @@ describe('createUser()', () => {
   };
 
   it('should save defaultConfig, if nothing was provided', () => {
-    const input = [{}];
-    const expectedOutput = { userID: 0, authData: null };
-    check(input, expectedOutput);
+    check([{}], { userID: 0, authData: null });
   });
 
   it('should save options that was not provided in defaultConfig', () => {
-    const input = [{ userID: 123, test: true }];
-    const expectedOutput = { userID: 123, authData: null, test: true };
-    check(input, expectedOutput);
+    check([{ userID: 123, test: true }], { userID: 123, authData: null, test: true });
   });
 
   it('should use default options if only userID was provided', () => {
-    const input = [{ userID: 123 }];
-    const expectedOutput = { userID: 123, authData: null };
-    check(input, expectedOutput);
+    check([{ userID: 123 }], { userID: 123, authData: null });
   });
 
   it('should use given config object if it is provided', () => {
     const customConfig = [{ userID: 456, authData: 'test' }];
-    const input = [{ userID: 123 }, customConfig];
     const expectedOutput = [...customConfig, { userID: 123, authData: null }];
-    ConfigManager.createUser(...input);
+    ConfigManager.createUser({ userID: 123 }, customConfig);
     expect(getConfigContent()).toEqual(expectedOutput);
   });
 });
