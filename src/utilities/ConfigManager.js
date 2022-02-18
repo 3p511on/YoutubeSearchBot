@@ -38,6 +38,8 @@ module.exports = class ConfigManager {
 
   static updateUser(userID, newData = {}, config = this.getConfig()) {
     const updatedUser = { ...this.getUser(userID, config), ...newData };
-    this.updateConfig(updatedUser);
+    const oldUserIndex = config.findIndex((entry) => entry.userID === updatedUser.userID);
+    config[oldUserIndex] = updatedUser;
+    this.updateConfig(config);
   }
 };
