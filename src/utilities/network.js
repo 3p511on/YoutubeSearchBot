@@ -2,6 +2,7 @@
 
 const http = require('http');
 const https = require('https');
+const { parseJSON } = require('./util');
 
 const makeRequestOptions = (url, options = {}) => {
   const { hostname, port, pathname, search } = new URL(url);
@@ -28,14 +29,11 @@ const fetch = (url, options = {}) => {
       if (code >= 400) return reject(new Error(`HTTP status code ${code}`));
       res.on('error', reject);
       const chunks = [];
-      try {
-        for await (const chunk of res) chunks.push(chunk);
-        const json = Buffer.concat(chunks).toString();
-        const object = JSON.parse(json);
-        return resolve(object);
-      } catch (error) {
-        return reject(error);
-      }
+      for await (const chunk of res) chunks.push(chunk);
+      const rawResponse = Buffer.concat(chunks).toString();
+      const [err, json] = parseJSON(rawResponse);
+      if (err) return resolve(rawResponse);
+      return resolve(json);
     });
     if (requestOptions.body) req.write(requestOptions.body);
     req.end();
