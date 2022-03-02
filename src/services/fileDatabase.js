@@ -5,7 +5,7 @@ const fs = require('node:fs');
 const CONFIG_PATH = 'config.json';
 const defaultConfig = { userID: 0, authData: null };
 
-module.exports = class ConfigManager {
+module.exports = class FileDatabase {
   static getConfig() {
     const isConfigExists = fs.existsSync(CONFIG_PATH);
     if (!isConfigExists) {
