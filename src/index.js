@@ -5,7 +5,6 @@ require('dotenv').config();
 const path = require('path');
 const { Telegraf } = require('telegraf');
 const TelegrafI18n = require('telegraf-i18n');
-const handlersController = require('./handlers');
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
@@ -15,6 +14,6 @@ const i18n = new TelegrafI18n({
 });
 bot.use(i18n.middleware());
 
-handlersController(bot);
+require('./loaders/loadHandlers')(bot);
 
 bot.launch();
