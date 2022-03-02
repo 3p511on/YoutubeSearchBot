@@ -8,9 +8,10 @@ module.exports = {
     types: ['action', 'command'],
     trigger: 'start',
   },
-  method(ctx) {
+  method(i18n, ctx) {
+    ctx.scene.enter('FindVideo');
     return {
-      content: ctx.i18n.t('start.greeting'),
+      content: i18n.t('start.greeting'),
       keyboard: Markup.inlineKeyboard([Markup.callbackButton('test', 'start')]),
     };
   },
