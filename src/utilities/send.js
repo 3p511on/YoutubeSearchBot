@@ -2,8 +2,10 @@
 
 const Extra = require('telegraf/extra');
 
-const send = async (ctx, data) => {
-  const { content, keyboard } = data;
+const send = async (ctx, data = {}) => {
+  let { content, keyboard } = data;
+  if (typeof data === 'string') content = data;
+  if (!content) return null;
   const markup = keyboard ? keyboard.extra(Extra.HTML()) : { parse_mode: 'HTML' };
   try {
     const hasPhoto = ctx.update?.callback_query?.message?.photo;
