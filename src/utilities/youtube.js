@@ -45,4 +45,21 @@ const getSearchResults = async (query, cookies) => {
   }
 };
 
-module.exports = { getSearchResults, Video };
+const extractID = (data) => {
+  const isID = typeof data === 'string' && data.length === 11 && !data.includes(' ');
+  if (isID) return data;
+  try {
+    const { searchParams, pathname, host } = new URL(data);
+    if (host === 'www.youtube.com' && pathname === '/watch') {
+      const id = searchParams.get('v');
+      return id;
+    } else if (host === 'youtu.be') {
+      return pathname.slice(1);
+    }
+    return null;
+  } catch (err) {
+    return null;
+  }
+};
+
+module.exports = { getSearchResults, Video, extractID };
