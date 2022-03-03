@@ -30,7 +30,7 @@ class Video {
   }
 }
 
-const getSearchResults = async (query, cookies) => {
+const getSearchResults = async (query, cookies = '') => {
   try {
     const headers = { Cookie: cookies };
     const res = await fetch(getSearchURL(query), { headers });
