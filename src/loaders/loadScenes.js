@@ -12,9 +12,9 @@ const HANDLERS_PATH = path.join(__dirname, '../handlers');
 const loadStep = async (step, ctx) => {
   try {
     const result = await step(ctx);
-    if (result.end) ctx.scene.leave();
+    if (result?.end) ctx.scene.leave();
     else if (result instanceof Error) return send(ctx, ctx.i18n.t(result.message));
-    send(ctx, result);
+    if (result) send(ctx, result);
     if (ctx.wizard) ctx.wizard.next();
     return true;
   } catch (err) {

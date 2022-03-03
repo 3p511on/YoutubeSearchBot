@@ -7,6 +7,9 @@ const { Telegraf } = require('telegraf');
 const TelegrafI18n = require('telegraf-i18n');
 const session = require('telegraf/session');
 
+const getUser = require('./middlewares/getUser');
+const saveLastAction = require('./middlewares/saveLastAction');
+
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const i18n = new TelegrafI18n({
@@ -15,6 +18,8 @@ const i18n = new TelegrafI18n({
 });
 bot.use(i18n.middleware());
 bot.use(session());
+bot.use(saveLastAction);
+bot.use(getUser);
 
 require('./loaders/loadScenes')(bot);
 require('./loaders/loadHandlers')(bot);
