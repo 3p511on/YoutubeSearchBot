@@ -5,7 +5,7 @@ require('dotenv').config();
 const path = require('path');
 const { Telegraf } = require('telegraf');
 const TelegrafI18n = require('telegraf-i18n');
-const session = require('telegraf/session');
+const session = require('telegraf/session');\
 
 const getUser = require('./middlewares/getUser');
 const saveLastAction = require('./middlewares/saveLastAction');
