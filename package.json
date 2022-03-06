@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run lint && jest",
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js",
+    "dev": "nodemon src/index.js -w src",
     "lint": "eslint src/index.js"
   },
   "keywords": [],
