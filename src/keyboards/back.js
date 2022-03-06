@@ -6,4 +6,7 @@ const backButton = (i18n, action = 'start', phrase = 'back.button') => Markup.ca
 
 const backKeyboard = (i18n, ...args) => Markup.inlineKeyboard([backButton(i18n, ...args)]);
 
-module.exports = { backButton, backKeyboard };
+const sceneRepeatKeyboard = (i18n, ...args) =>
+  Markup.inlineKeyboard([[Markup.callbackButton(i18n.t('back.repeat'), 'repeat')], [backButton(i18n, ...args)]]);
+
+module.exports = { backButton, backKeyboard, sceneRepeatKeyboard };

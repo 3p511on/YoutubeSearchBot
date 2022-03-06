@@ -1,6 +1,7 @@
 'use strict';
 
 const { fetch } = require('./network');
+const { cookiesToString } = require('./util');
 
 const getSearchURL = (query) => `https://www.youtube.com/results?search_query=${query.split(' ').join('+')}`;
 
@@ -18,12 +19,13 @@ class Video {
   }
 
   patch(data = {}) {
-    if (!data?.videoId) console.log(data);
     this.id = data.videoId ?? null;
     this.title = data?.title?.runs[0]?.text ?? null;
     this.thumbnails = data?.thumbnail?.thumbnails ?? null;
     this.duration = data?.lengthText?.simpleText ?? null;
-    this.viewsText = data?.viewCountText?.simpleText ?? null;
+    this.viewsText = data?.viewCountText?.runs?.length
+      ? data?.viewCountText?.runs[0]?.text ?? null
+      : data?.viewCountText?.simpleText ?? null;
     this.channelName = data?.longBylineText?.runs[0]?.text ?? null;
     this.channelUrl =
       data?.longBylineText?.runs[0]?.navigationEndpoint?.commandMetadata?.webCommandMetadata?.url ?? null;
@@ -62,4 +64,13 @@ const extractID = (data) => {
   }
 };
 
-module.exports = { getSearchResults, Video, extractID };
+const findVideo = async (videoID, searchQuery, parsedCookies = {}) => {
+  const userCookies = cookiesToString(parsedCookies);
+  const searchResults = await getSearchResults(searchQuery, userCookies);
+  const info = searchResults.find((r) => r.id === videoID);
+  if (!info) return null;
+  const position = searchResults.findIndex((video) => video.id === videoID) + 1;
+  return { info, searchQuery, position };
+};
+
+module.exports = { getSearchResults, Video, extractID, findVideo };

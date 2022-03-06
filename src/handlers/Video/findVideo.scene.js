@@ -2,7 +2,7 @@
 
 const { backKeyboard } = require('../../keyboards/back');
 const { videoInfoKeyboard } = require('../../keyboards/videoInfo');
-const { extractID, getSearchResults } = require('../../utilities/youtube');
+const { extractID, findVideo } = require('../../utilities/youtube');
 
 module.exports = {
   data: {
@@ -28,14 +28,10 @@ module.exports = {
       if (!ctx?.message?.text) return null;
       ctx.session.searchQuery = ctx.message.text;
       const { videoID, searchQuery } = ctx.session;
-      const userCookies = ctx?.user?.authData?.cookies;
-      const searchResults = await getSearchResults(searchQuery, userCookies);
-      const videoInfo = searchResults.find((r) => r.id === videoID);
-      if (!videoInfo) return new Error('findVideo.videoNotFound', { searchQuery });
-      const position = searchResults.findIndex((video) => video.id === videoID) + 1;
-      const templateVariables = { videoInfo, searchQuery, position };
+      const video = await findVideo(videoID, searchQuery, ctx?.user?.authData?.cookies);
+      if (!video) return new Error(ctx.i18n.t('findVideo.videoNotFound', { searchQuery }));
       return {
-        content: ctx.i18n.t('findVideo.videoInfo', templateVariables),
+        content: ctx.i18n.t('findVideo.videoInfo', video),
         keyboard: videoInfoKeyboard(ctx.i18n),
         end: true,
       };

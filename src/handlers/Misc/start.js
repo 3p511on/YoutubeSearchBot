@@ -1,6 +1,6 @@
 'use strict';
 
-const { Markup } = require('telegraf/extra');
+const { startKeyboard } = require('../../keyboards/start');
 
 module.exports = {
   data: {
@@ -8,10 +8,10 @@ module.exports = {
     types: ['action', 'command'],
     trigger: 'start',
   },
-  method(i18n, ctx) {
+  method(i18n) {
     return {
       content: i18n.t('start.greeting'),
-      keyboard: Markup.inlineKeyboard([Markup.callbackButton(ctx.i18n.t('start.findVideo'), 'findvideo')]),
+      keyboard: startKeyboard(i18n),
     };
   },
 };

@@ -42,4 +42,20 @@ module.exports = class FileDatabase {
     config[oldUserIndex] = updatedUser;
     this.updateConfig(config);
   }
+
+  static addFeatured(userID, videoID, searchQuery, config = this.getConfig()) {
+    const user = this.getUser(userID, config);
+    if (!user.featured) user.featured = [];
+    const isVideoAlreadyFeatured = user.featured.find((v) => v.videoID === videoID);
+    if (isVideoAlreadyFeatured) return;
+    user.featured.push({ videoID, searchQuery });
+    this.updateUser(userID, user, config);
+  }
+
+  static removeFeatured(userID, videoID, config = this.getConfig()) {
+    const user = this.getUser(userID, config);
+    if (!user.featured) user.featured = [];
+    user.featured = user.featured.filter((v) => v.videoID !== videoID);
+    this.updateUser(userID, user, config);
+  }
 };
