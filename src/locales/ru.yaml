@@ -51,3 +51,14 @@ lastVideo:
 
 featured:
   noVideos: У вас еще нет сохраненных видео
+  videos: Выберите нужное видео ниже
+  update: Обновить информацию
+  unsubscribe: Убрать из избранного
+  addSuccess: Видео успешно добавлено в избранные
+  removeSuccess: Видео успешно удалено из избранного
+
+videoCheck:
+  videoNotFound: |
+    ⚠️ <b>Избранное видео <code>${info.title}</code> не было найдено по запросу <code>${searchQuery}</code></b>
+    Удалено из избранного
+    

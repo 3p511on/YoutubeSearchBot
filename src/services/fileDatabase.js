@@ -1,8 +1,9 @@
 'use strict';
 
 const fs = require('node:fs');
+const path = require('node:path');
 
-const CONFIG_PATH = 'config.json';
+const CONFIG_PATH = path.join(__dirname, '../../config.json');
 const defaultConfig = { userID: 0, authData: null };
 
 module.exports = class FileDatabase {
@@ -43,19 +44,19 @@ module.exports = class FileDatabase {
     this.updateConfig(config);
   }
 
-  static addFeatured(userID, videoID, searchQuery, config = this.getConfig()) {
+  static addFeatured(userID, video, searchQuery, config = this.getConfig()) {
     const user = this.getUser(userID, config);
     if (!user.featured) user.featured = [];
-    const isVideoAlreadyFeatured = user.featured.find((v) => v.videoID === videoID);
+    const isVideoAlreadyFeatured = user.featured.find((v) => v.info.id === video.info.id);
     if (isVideoAlreadyFeatured) return;
-    user.featured.push({ videoID, searchQuery });
+    user.featured.push({ ...video, searchQuery });
     this.updateUser(userID, user, config);
   }
 
   static removeFeatured(userID, videoID, config = this.getConfig()) {
     const user = this.getUser(userID, config);
     if (!user.featured) user.featured = [];
-    user.featured = user.featured.filter((v) => v.videoID !== videoID);
+    user.featured = user.featured.filter((v) => v.info.id !== videoID);
     this.updateUser(userID, user, config);
   }
 };

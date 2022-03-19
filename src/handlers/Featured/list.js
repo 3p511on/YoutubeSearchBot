@@ -2,7 +2,6 @@
 
 const Markup = require('telegraf/markup');
 const { backKeyboard } = require('../../keyboards/back');
-const { Video } = require('../../utilities/youtube');
 
 module.exports = {
   data: {
@@ -18,7 +17,7 @@ module.exports = {
         keyboard: backKeyboard(i18n),
       };
     }
-    const videoButtons = ctx.user.featured.map((v) => [Markup.callbackButton(v.title, `featured:${v.id}`)]);
+    const videoButtons = videos.map((v) => [Markup.callbackButton(v.info.title, `featured:${v.info.id}`)]);
     return { content: i18n.t('featured.videos'), keyboard: Markup.inlineKeyboard(videoButtons) };
   },
 };

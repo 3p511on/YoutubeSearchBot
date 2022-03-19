@@ -10,7 +10,8 @@ module.exports = {
     trigger: 'settings',
   },
   method(i18n, ctx) {
-    const cookies = cookiesToString(ctx?.user?.authData?.cookies);
+    const rawCookies = ctx?.user?.authData?.cookies;
+    const cookies = rawCookies ? cookiesToString(rawCookies) : null;
     return { content: i18n.t('config.cookies', { cookies }), keyboard: configKeyboard(ctx.i18n) };
   },
 };

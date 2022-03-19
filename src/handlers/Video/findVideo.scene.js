@@ -30,6 +30,7 @@ module.exports = {
       const { videoID, searchQuery } = ctx.session;
       const video = await findVideo(videoID, searchQuery, ctx?.user?.authData?.cookies);
       if (!video) return new Error(ctx.i18n.t('findVideo.videoNotFound', { searchQuery }));
+      ctx.session.video = video;
       return {
         content: ctx.i18n.t('findVideo.videoInfo', video),
         keyboard: videoInfoKeyboard(ctx.i18n),

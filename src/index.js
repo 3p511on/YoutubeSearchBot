@@ -7,9 +7,11 @@ const { Telegraf } = require('telegraf');
 const TelegrafI18n = require('telegraf-i18n');
 const session = require('telegraf/session');
 
+const videoCheck = require('./schedulers/videoCheck');
 const getUser = require('./middlewares/getUser');
 const saveLastAction = require('./middlewares/saveLastAction');
 
+const SCHEDULER_INTERVAL = 20 * 1000;
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 const i18n = new TelegrafI18n({
@@ -23,5 +25,8 @@ bot.use(getUser);
 
 require('./loaders/loadScenes')(bot);
 require('./loaders/loadHandlers')(bot);
+
+videoCheck(bot, i18n);
+setInterval(() => videoCheck(bot, i18n), SCHEDULER_INTERVAL);
 
 bot.launch();

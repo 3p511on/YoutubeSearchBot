@@ -11,8 +11,8 @@ module.exports = {
     trigger: 'subscribe',
   },
   method(i18n, ctx) {
-    const { videoID, searchQuery } = ctx.session;
-    if (!videoID || !searchQuery) {
+    const { video, searchQuery } = ctx.session;
+    if (!video?.info?.id || !video?.searchQuery) {
       return {
         content: i18n.t('lastVideo.notFound'),
         keyboard: Markup.inlineKeyboard([
@@ -20,12 +20,11 @@ module.exports = {
         ]),
       };
     }
-    FileDatabase.addFeatured(ctx.from.id, videoID, searchQuery);
+    FileDatabase.addFeatured(ctx.from.id, video, searchQuery);
     return {
-      content: i18n.t('subscribe.success'),
+      content: i18n.t('featured.addSuccess'),
       keyboard: Markup.inlineKeyboard([
-        [backButton(i18n, 'featured', 'start.featured')],
-        [backButton(i18n, 'start', 'back.start')],
+        [backButton(i18n, 'start', 'back.start'), backButton(i18n, 'featured', 'start.featured')],
       ]),
     };
   },

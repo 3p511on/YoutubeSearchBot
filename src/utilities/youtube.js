@@ -11,7 +11,7 @@ class Video {
   }
 
   get views() {
-    return +this.viewsText.match(/\d+/g).join('');
+    return this.viewsText ? +this.viewsText.match(/\d+/g).join('') : 0;
   }
 
   get url() {
